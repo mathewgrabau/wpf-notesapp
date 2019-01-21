@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.ComponentModel;
 
 namespace NotesApp.Models
@@ -8,6 +9,7 @@ namespace NotesApp.Models
 
         private int _id;
 
+        [PrimaryKey, AutoIncrement]
         public int Id
         {
             get { return _id; }
@@ -15,6 +17,18 @@ namespace NotesApp.Models
             {
                 _id = value;
                 OnPropertyChanged(nameof(Id));
+            }
+        }
+
+        private int _notebookId;
+
+        public int NotebookId
+        {
+            get { return _notebookId; }
+            set
+            {
+                _notebookId = value;
+                OnPropertyChanged(nameof(NotebookId));
             }
         }
 

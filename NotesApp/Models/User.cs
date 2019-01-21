@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SQLite;
 
 namespace NotesApp.Models
 {
@@ -11,6 +12,7 @@ namespace NotesApp.Models
     {
         private int _id;
 
+        [PrimaryKey, AutoIncrement]
         public int Id
         {
             get { return _id; }
@@ -21,6 +23,7 @@ namespace NotesApp.Models
 
         private string _name;
 
+        [MaxLength(50)]
         public string Name
         {
             get { return _name; }
@@ -32,6 +35,7 @@ namespace NotesApp.Models
 
         private string _lastName;
 
+        [MaxLength(50)]
         public string LastName
         {
             get { return _lastName; }
