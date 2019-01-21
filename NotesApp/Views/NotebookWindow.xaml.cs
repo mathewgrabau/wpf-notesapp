@@ -23,5 +23,11 @@ namespace NotesApp.Views
         {
             InitializeComponent();
         }
+
+        private void ExitItem_Click(object sender, RoutedEventArgs e)
+        {
+            // Triggers the shut down
+            Application.Current.Shutdown();
+        }
     }
 }

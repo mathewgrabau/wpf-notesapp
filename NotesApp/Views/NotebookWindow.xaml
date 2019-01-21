@@ -5,8 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NotesApp.Views"
         mc:Ignorable="d"
+        xmlns:viewModels="clr-namespace:NotesApp.ViewModels"
         Title="NotebookWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <Window.Resources>
+        <viewModels:NotesViewModel x:Key="viewModel" />
+    </Window.Resources>
+    <DockPanel DataContext="{StaticResource viewModel}">
+        <!-- hosts the menu -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Header="New Notebook" Command="{Binding NewNotebookCommand}" />
+                <MenuItem Header="New Note" Command="{Binding NewNoteCommand}" CommandParameter="{Binding SelectedNotebook}" />
+                <Separator />
+                <MenuItem Header="Exit" Click="ExitItem_Click" />
+            </MenuItem>
+            
+        </Menu>
+        <!-- rest of the functionality -->
+        <Grid>
+            
+        </Grid>
+    </DockPanel>
 </Window>

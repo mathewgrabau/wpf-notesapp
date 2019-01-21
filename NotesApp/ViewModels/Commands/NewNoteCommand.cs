@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NotesApp.Models;
+using System;
 using System.Windows.Input;
 
 namespace NotesApp.ViewModels.Commands
@@ -15,12 +16,15 @@ namespace NotesApp.ViewModels.Commands
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            Notebook selected = parameter as Notebook;
+            return selected != null;
         }
 
         public void Execute(object parameter)
         {
             // TOOD: Login functionality
+            Notebook selectedNotebook = parameter as Notebook;
+            ViewModel.CreateNote(selectedNotebook.Id);
         }
     }
 }

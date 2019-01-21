@@ -25,6 +25,8 @@ namespace NotesApp.ViewModels.Commands
         public void Execute(object parameter)
         {
             // TOOD: Login functionality
+
+            ViewModel.CreateNotebook();
         }
     }
 }

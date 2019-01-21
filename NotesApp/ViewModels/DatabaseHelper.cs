@@ -13,7 +13,7 @@ namespace NotesApp.ViewModels
         /// <summary>
         /// Contains the path where we store it.
         /// </summary>
-        string _dbFile = Path.Combine(Environment.CurrentDirectory, "notesDatabase.db3");
+        static string _dbFile = Path.Combine(Environment.CurrentDirectory, "notesDatabase.db3");
 
         public static bool Insert<T>(T item)
         {
