@@ -36,6 +36,13 @@ namespace NotesApp.ViewModels
         {
             NewNotebookCommand = new NewNotebookCommand(this);
             NewNoteCommand = new NewNoteCommand(this);
+
+            // Init the variables
+            Notebooks = new ObservableCollection<Notebook>();
+            Notes = new ObservableCollection<Note>();
+
+            // Init the different stuff.
+            ReadNotebooks();
         }
 
         public void CreateNotebook()
@@ -64,6 +71,46 @@ namespace NotesApp.ViewModels
 
             // Adding it into the database now
             DatabaseHelper.Insert(newNote);
+        }
+
+        public void ReadNotebooks()
+        {
+            using (var connection = new SQLite.SQLiteConnection(DatabaseHelper.DatabaseFile))
+            {
+                try
+                {
+                    var notebooks = connection.Table<Notebook>().ToList();
+
+                    Notebooks.Clear();
+                    foreach (var notebook in notebooks)
+                    {
+                        Notebooks.Add(notebook);
+                    }
+                }
+                catch (SQLite.SQLiteException)
+                {
+                    // TODO logging or information should get shown here?
+
+                    Notebooks.Clear();
+                }
+            }
+        }
+
+        public void ReadNotes()
+        {
+            using (var connection = new SQLite.SQLiteConnection(DatabaseHelper.DatabaseFile))
+            {
+                if (SelectedNotebook != null)
+                {
+                    var notes = connection.Table<Note>().Where(note => note.Id == SelectedNotebook.Id).ToList();
+
+                    Notes.Clear();
+                    foreach (var note in notes)
+                    {
+                        Notes.Add(note);
+                    }
+                }
+            }
         }
     }
 }

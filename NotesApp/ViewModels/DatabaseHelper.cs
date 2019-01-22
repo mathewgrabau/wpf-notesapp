@@ -13,13 +13,13 @@ namespace NotesApp.ViewModels
         /// <summary>
         /// Contains the path where we store it.
         /// </summary>
-        static string _dbFile = Path.Combine(Environment.CurrentDirectory, "notesDatabase.db3");
+        public static string DatabaseFile = Path.Combine(Environment.CurrentDirectory, "notesDatabase.db3");
 
         public static bool Insert<T>(T item)
         {
             var result = false;
 
-            using (SQLiteConnection connection = new SQLiteConnection(_dbFile))
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseFile))
             {
                 // Ensure the table exists, and then insert it.
                 connection.CreateTable<T>();
@@ -34,7 +34,7 @@ namespace NotesApp.ViewModels
         {
             var result = false;
 
-            using (SQLiteConnection connection = new SQLiteConnection(_dbFile))
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseFile))
             {
                 // Ensure the table exists, and then insert it.
                 connection.CreateTable<T>();
@@ -49,7 +49,7 @@ namespace NotesApp.ViewModels
         {
             var result = false;
 
-            using (SQLiteConnection connection = new SQLiteConnection(_dbFile))
+            using (SQLiteConnection connection = new SQLiteConnection(DatabaseFile))
             {
                 // Ensure the table exists, and then insert it.
                 connection.CreateTable<T>();
