@@ -29,5 +29,22 @@ namespace NotesApp.Views
             // Triggers the shut down
             Application.Current.Shutdown();
         }
+        
+        /// <summary>
+        /// Updates the character count.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ContentEditorRichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int numberOfCharacters = new TextRange(contentEditorRichTextBox.Document.ContentStart, contentEditorRichTextBox.Document.ContentEnd).Text.Length;
+
+            statusTextBlock.Text = $"Document length: {numberOfCharacters} characters";
+        }
+
+        private void BoldButton_Click(object sender, RoutedEventArgs e)
+        {
+            contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+        }
     }
 }

@@ -21,8 +21,18 @@
             </MenuItem>
             
         </Menu>
+
+        <!-- want the status bar to be across the whole bottom-->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock x:Name="statusTextBlock" />
+            </StatusBarItem>
+        </StatusBar>
+
         <!-- rest of the functionality goes into here -->
-        <ListView Width="140" DockPanel.Dock="Left" ItemsSource="{Binding Notebooks}">
+        <ListView Width="140" DockPanel.Dock="Left" 
+                  ItemsSource="{Binding Notebooks}"
+                  SelectedItem="{Binding SelectedNotebook, UpdateSourceTrigger=PropertyChanged}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" />
@@ -39,9 +49,18 @@
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
                 <Button Content="Speech" />
+                <Button>
+                    <Button Content="B" x:Name="boldButton" Click="BoldButton_Click" />
+                </Button>
             </ToolBar>
         </ToolBarTray>
 
-        <Grid></Grid>
+        <!-- Where we actually put the note editor (the real content) -->
+        <Grid>
+            <RichTextBox x:Name="contentEditorRichTextBox"
+                         TextChanged="ContentEditorRichTextBox_TextChanged" />
+        </Grid>
+
+        
     </DockPanel>
 </Window>
