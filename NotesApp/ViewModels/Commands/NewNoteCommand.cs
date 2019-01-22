@@ -22,9 +22,11 @@ namespace NotesApp.ViewModels.Commands
 
         public void Execute(object parameter)
         {
-            // TOOD: Login functionality
             Notebook selectedNotebook = parameter as Notebook;
-            ViewModel.CreateNote(selectedNotebook.Id);
+            if (selectedNotebook != null)
+            {
+                ViewModel.CreateNote(selectedNotebook.Id);
+            }
         }
     }
 }

@@ -45,17 +45,21 @@ namespace NotesApp.ViewModels
                 Name = "New Notebook"
             };
 
-            DatabaseHelper.Insert(new Notebook);
-
+            DatabaseHelper.Insert(newNotebook);
         }
 
+        /// <summary>
+        /// Creates the note that should be added to the database.
+        /// </summary>
+        /// <param name="notebookId"></param>
         public void CreateNote(int notebookId)
         {
             var newNote = new Note()
             {
                 NotebookId = notebookId,
                 CreatedTime = DateTime.Now,
-                UpdatedTime = DateTime.Now
+                UpdatedTime = DateTime.Now,
+                Title = "New Note"
             };
 
             // Adding it into the database now

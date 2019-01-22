@@ -21,9 +21,19 @@
             </MenuItem>
             
         </Menu>
-        <!-- rest of the functionality -->
-        <Grid>
+        <!-- rest of the functionality goes into here -->
+        <ListView Width="140" DockPanel.Dock="Left">
             
-        </Grid>
+        </ListView>
+        <ListView Width="140" DockPanel.Dock="Left">
+            
+        </ListView>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                <Button Content="Speech" />
+            </ToolBar>
+        </ToolBarTray>
+
+        <Grid></Grid>
     </DockPanel>
 </Window>
