@@ -48,7 +48,7 @@
         </ListView>
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button x:Name="speechButton" Content="Speech" Click="SpeechButton_Click" />
+                <ToggleButton x:Name="speechButton" Content="Speech" Click="SpeechButton_Click" />
                 <Button>
                     <Button Content="B" x:Name="boldButton" Click="BoldButton_Click" />
                 </Button>

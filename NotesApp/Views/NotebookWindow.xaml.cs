@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -22,7 +23,6 @@ namespace NotesApp.Views
     public partial class NotebookWindow : Window
     {
         SpeechRecognitionEngine _recognizer;
-        bool _isRecognizing;
 
         public NotebookWindow()
         {
@@ -76,15 +76,14 @@ namespace NotesApp.Views
 
         private void SpeechButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!_isRecognizing)
+            var isButtonChecked = (sender as ToggleButton).IsChecked.GetValueOrDefault();
+            if (isButtonChecked)
             {
                 _recognizer.RecognizeAsync(RecognizeMode.Multiple);
-                _isRecognizing = true;
             }
             else
             {
                 _recognizer.RecognizeAsyncStop();
-                _isRecognizing = false;
             }
         }
     }
