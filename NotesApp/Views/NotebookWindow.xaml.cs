@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Speech.Recognition;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,9 +21,34 @@ namespace NotesApp.Views
     /// </summary>
     public partial class NotebookWindow : Window
     {
+        SpeechRecognitionEngine _recognizer;
+        bool _isRecognizing;
+
         public NotebookWindow()
         {
             InitializeComponent();
+
+            // Setup the event handlers for responding to the application events
+            var currentCulture = (from r in SpeechRecognitionEngine.InstalledRecognizers()
+                                 where r.Culture.Equals(Thread.CurrentThread.CurrentCulture)
+                                 select r).FirstOrDefault();
+            _recognizer = new SpeechRecognitionEngine(currentCulture);
+
+            var builder = new GrammarBuilder();
+            builder.AppendDictation();
+            var grammar = new Grammar(builder);
+
+            // Do the configuration now.
+            _recognizer.LoadGrammar(grammar);
+            _recognizer.SetInputToDefaultAudioDevice();
+            _recognizer.SpeechRecognized += _recognizer_SpeechRecognized;
+        }
+
+        private void _recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+            string recognizedText = e.Result.Text;
+
+            contentEditorRichTextBox.Document.Blocks.Add(new Paragraph(new Run(recognizedText)));
         }
 
         private void ExitItem_Click(object sender, RoutedEventArgs e)
@@ -45,6 +72,20 @@ namespace NotesApp.Views
         private void BoldButton_Click(object sender, RoutedEventArgs e)
         {
             contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+        }
+
+        private void SpeechButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_isRecognizing)
+            {
+                _recognizer.RecognizeAsync(RecognizeMode.Multiple);
+                _isRecognizing = true;
+            }
+            else
+            {
+                _recognizer.RecognizeAsyncStop();
+                _isRecognizing = false;
+            }
         }
     }
 }
