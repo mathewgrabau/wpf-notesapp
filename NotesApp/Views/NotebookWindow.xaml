@@ -50,6 +50,8 @@
             <ToolBar>
                 <ToggleButton x:Name="speechButton" Content="Speech" Click="SpeechButton_Click" />
                 <ToggleButton Content="B" x:Name="boldButton" Click="BoldButton_Click" />
+                <ToggleButton Content="I" x:Name="italicButton" Click="ItalicButton_Click" />
+                <ToggleButton Content="U" x:Name="underlineButton" Click="UnderlineButton_Click" />
             </ToolBar>
         </ToolBarTray>
 

@@ -108,6 +108,39 @@ namespace NotesApp.Views
             var selectedState = contentEditorRichTextBox.Selection.GetPropertyValue(Inline.FontWeightProperty);
             boldButton.IsChecked = selectedState != DependencyProperty.UnsetValue && selectedState.Equals(FontWeights.Bold);
 
+            var italicState = contentEditorRichTextBox.Selection.GetPropertyValue(Inline.FontStyleProperty);
+            italicButton.IsChecked = italicState != DependencyProperty.UnsetValue && italicState.Equals(FontStyles.Italic);
+
+            var underlineState = contentEditorRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty);
+            underlineButton.IsChecked = underlineState != DependencyProperty.UnsetValue && underlineState.Equals(TextDecorations.Underline);
+        }
+
+        private void ItalicButton_Click(object sender, RoutedEventArgs e)
+        {
+            var isButtonEnabled = (sender as ToggleButton).IsChecked.GetValueOrDefault();
+
+            if (isButtonEnabled)
+            {
+                contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Italic);
+            }
+            else
+            {
+                contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontStyleProperty, FontStyles.Normal);
+            }
+        }
+
+        private void UnderlineButton_Click(object sender, RoutedEventArgs e)
+        {
+            var isButtonEnabled = (sender as ToggleButton).IsChecked.GetValueOrDefault();
+
+            if (isButtonEnabled)
+            {
+                contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, TextDecorations.Underline);
+            }
+            else
+            {
+                contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, null);
+            }
         }
     }
 }
