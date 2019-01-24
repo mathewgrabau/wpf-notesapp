@@ -49,9 +49,15 @@
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
                 <ToggleButton x:Name="speechButton" Content="Speech" Click="SpeechButton_Click" />
-                <ToggleButton Content="B" x:Name="boldButton" Click="BoldButton_Click" />
-                <ToggleButton Content="I" x:Name="italicButton" Click="ItalicButton_Click" />
-                <ToggleButton Content="U" x:Name="underlineButton" Click="UnderlineButton_Click" />
+                <ToggleButton x:Name="boldButton" Click="BoldButton_Click">
+                    <TextBlock Text="B" FontWeight="Bold" />
+                </ToggleButton>
+                <ToggleButton x:Name="italicButton" Click="ItalicButton_Click">
+                    <TextBlock Text="I" FontStyle="Italic" />
+                </ToggleButton>
+                <ToggleButton x:Name="underlineButton" Click="UnderlineButton_Click">
+                    <TextBlock Text="U" TextDecorations="Underline" />
+                </ToggleButton>
             </ToolBar>
         </ToolBarTray>
 
