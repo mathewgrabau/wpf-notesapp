@@ -30,18 +30,25 @@ namespace NotesApp.Views
 
             // Setup the event handlers for responding to the application events
             var currentCulture = (from r in SpeechRecognitionEngine.InstalledRecognizers()
-                                 where r.Culture.Equals(Thread.CurrentThread.CurrentCulture)
-                                 select r).FirstOrDefault();
-            _recognizer = new SpeechRecognitionEngine(currentCulture);
+                                  where r.Culture.Equals(Thread.CurrentThread.CurrentCulture)
+                                  select r).FirstOrDefault();
+            if (currentCulture != null)
+            {
+                _recognizer = new SpeechRecognitionEngine(currentCulture);
 
-            var builder = new GrammarBuilder();
-            builder.AppendDictation();
-            var grammar = new Grammar(builder);
+                var builder = new GrammarBuilder();
+                builder.AppendDictation();
+                var grammar = new Grammar(builder);
 
-            // Do the configuration now.
-            _recognizer.LoadGrammar(grammar);
-            _recognizer.SetInputToDefaultAudioDevice();
-            _recognizer.SpeechRecognized += _recognizer_SpeechRecognized;
+                // Do the configuration now.
+                _recognizer.LoadGrammar(grammar);
+                _recognizer.SetInputToDefaultAudioDevice();
+                _recognizer.SpeechRecognized += _recognizer_SpeechRecognized;
+            }
+            else
+            {
+                speechButton.IsEnabled = false;
+            }
         }
 
         private void _recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
@@ -71,7 +78,16 @@ namespace NotesApp.Views
 
         private void BoldButton_Click(object sender, RoutedEventArgs e)
         {
-            contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+            var isButtonEnabled = (sender as ToggleButton).IsChecked.GetValueOrDefault();
+
+            if (isButtonEnabled)
+            {
+                contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+            }
+            else
+            {
+                contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Normal);
+            }
         }
 
         private void SpeechButton_Click(object sender, RoutedEventArgs e)
@@ -85,6 +101,13 @@ namespace NotesApp.Views
             {
                 _recognizer.RecognizeAsyncStop();
             }
+        }
+
+        private void ContentEditorRichTextBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var selectedState = contentEditorRichTextBox.Selection.GetPropertyValue(Inline.FontWeightProperty);
+            boldButton.IsChecked = selectedState != DependencyProperty.UnsetValue && selectedState.Equals(FontWeights.Bold);
+
         }
     }
 }
