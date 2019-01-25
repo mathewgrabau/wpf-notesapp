@@ -49,6 +49,13 @@ namespace NotesApp.Views
             {
                 speechButton.IsEnabled = false;
             }
+
+            // Need the list of the fonts
+            var fonts = Fonts.SystemFontFamilies.OrderBy(f=>f.Source);
+            fontFamilyComboBox.ItemsSource = fonts;
+
+            List<double> fontSizes = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24 };
+            fontSizeComboBox.ItemsSource = fontSizes;
         }
 
         private void _recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
@@ -113,6 +120,11 @@ namespace NotesApp.Views
 
             var underlineState = contentEditorRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty);
             underlineButton.IsChecked = underlineState != DependencyProperty.UnsetValue && underlineState.Equals(TextDecorations.Underline);
+
+            // Font settings now (note the handling for the size combo box - a bit more robust than what was present before.
+            fontFamilyComboBox.SelectedItem = contentEditorRichTextBox.Selection.GetPropertyValue(Inline.FontFamilyProperty);
+            var fontSizeValue = contentEditorRichTextBox.Selection.GetPropertyValue(Inline.FontSizeProperty);
+            fontSizeComboBox.Text = fontSizeValue != DependencyProperty.UnsetValue ? fontSizeValue.ToString() : string.Empty;
         }
 
         private void ItalicButton_Click(object sender, RoutedEventArgs e)
@@ -140,6 +152,24 @@ namespace NotesApp.Views
             else
             {
                 contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, null);
+            }
+        }
+
+        private void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (fontFamilyComboBox.SelectedItem != null)
+            {
+                contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, fontFamilyComboBox.SelectedItem);
+            }
+        }
+
+        private void FontSizeComboBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            int intValue;
+            double doubleValue;
+            if (int.TryParse(fontSizeComboBox.Text, out intValue) || double.TryParse(fontSizeComboBox.Text, out doubleValue))
+            {
+                contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeComboBox.Text);
             }
         }
     }
