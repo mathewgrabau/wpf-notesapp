@@ -21,8 +21,7 @@ namespace NotesApp.ViewModels
             set
             {
                 _selectedNotebook = value;
-
-                // TODO get the notes
+                ReadNotes();
             }
         }
 
@@ -43,6 +42,7 @@ namespace NotesApp.ViewModels
 
             // Init the different stuff.
             ReadNotebooks();
+            ReadNotes();
         }
 
         public void CreateNotebook()
@@ -53,6 +53,9 @@ namespace NotesApp.ViewModels
             };
 
             DatabaseHelper.Insert(newNotebook);
+
+            // Refreshing
+            ReadNotebooks();
         }
 
         /// <summary>
@@ -71,6 +74,8 @@ namespace NotesApp.ViewModels
 
             // Adding it into the database now
             DatabaseHelper.Insert(newNote);
+            // Invoke the read notes to bind the list again
+            ReadNotes();
         }
 
         public void ReadNotebooks()
@@ -94,15 +99,19 @@ namespace NotesApp.ViewModels
                     Notebooks.Clear();
                 }
             }
+
+            // Refreshing now
+            ReadNotes();
         }
 
         public void ReadNotes()
         {
-            using (var connection = new SQLite.SQLiteConnection(DatabaseHelper.DatabaseFile))
+            if (SelectedNotebook != null)
             {
-                if (SelectedNotebook != null)
+                using (var connection = new SQLite.SQLiteConnection(DatabaseHelper.DatabaseFile))
                 {
-                    var notes = connection.Table<Note>().Where(note => note.Id == SelectedNotebook.Id).ToList();
+
+                    var notes = connection.Table<Note>().Where(note => note.NotebookId == SelectedNotebook.Id).ToList();
 
                     Notes.Clear();
                     foreach (var note in notes)
