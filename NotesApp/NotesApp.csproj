@@ -91,6 +91,12 @@
     <Compile Include="Views\NotebookWindow.xaml.cs">
       <DependentUpon>NotebookWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserControls\NotebookControl.xaml.cs">
+      <DependentUpon>NotebookControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\NotesControl.xaml.cs">
+      <DependentUpon>NotesControl.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Note.cs" />
@@ -128,6 +134,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NotebookWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\NotebookControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\NotesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

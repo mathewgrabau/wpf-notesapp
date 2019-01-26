@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:NotesApp.Views"
         mc:Ignorable="d"
         xmlns:viewModels="clr-namespace:NotesApp.ViewModels"
+        xmlns:uc="clr-namespace:NotesApp.Views.UserControls"
         Title="NotebookWindow" Height="450" Width="800">
     <Window.Resources>
         <viewModels:NotesViewModel x:Key="viewModel" />
@@ -32,17 +33,19 @@
         <!-- rest of the functionality goes into here -->
         <ListView Width="140" DockPanel.Dock="Left" 
                   ItemsSource="{Binding Notebooks}"
+                  Background="MidnightBlue"
                   SelectedItem="{Binding SelectedNotebook, UpdateSourceTrigger=PropertyChanged}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
+                    <!-- Bind the entire notebook. -->
+                    <uc:NotebookControl Notebook="{Binding}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
         <ListView Width="140" DockPanel.Dock="Left" ItemsSource="{Binding Notes}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}" />
+                    <uc:NotesControl Note="{Binding}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
