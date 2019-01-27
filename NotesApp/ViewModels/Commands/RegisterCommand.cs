@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NotesApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,12 +20,49 @@ namespace NotesApp.ViewModels.Commands
 
         public bool CanExecute(object parameter)
         {
+            var user = parameter as User;
+
+            // TODO I want to figure out how to make these work properly (big gap in the video there)
+#if false
+            if (user == null)
+            {
+                return false;
+            }
+
+            // Ensuring both are provided.
+            if (string.IsNullOrEmpty(user.Username))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(user.Password))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(user.Email))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(user.LastName))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(user.FirstName))
+            {
+                return false;
+            }
+#endif
+
             return true;
         }
 
         public void Execute(object parameter)
         {
             // TOOD: Login functionality
+            ViewModel.Register();
         }
     }
 }

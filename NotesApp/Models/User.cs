@@ -21,14 +21,56 @@ namespace NotesApp.Models
             }
         }
 
-        private string _name;
+        private string _username;
 
         [MaxLength(50)]
-        public string Name
+        public string Username
         {
-            get { return _name; }
-            set { _name = value;
-                OnPropertyChanged(nameof(Name));
+            get { return _username; }
+            set
+            {
+                _username = value;
+                OnPropertyChanged(nameof(Username));
+            }
+        }
+
+        private string _password;
+
+        [MaxLength(50)]
+        public string Password
+        {
+            get { return _password; }
+            set
+            {
+                _password = value;
+                OnPropertyChanged(nameof(Password));
+            }
+        }
+
+        private string _email;
+
+        public string Email
+        {
+            get { return _email; }
+            set
+            {
+                _email = value;
+                OnPropertyChanged(nameof(Email));
+            }
+        }
+
+        private string _firstName;
+
+        public string FirstName
+        {
+            get
+            {
+                return _firstName;
+            }
+            set
+            {
+                _firstName = value;
+                OnPropertyChanged(nameof(FirstName));
             }
         }
 
@@ -39,7 +81,8 @@ namespace NotesApp.Models
         public string LastName
         {
             get { return _lastName; }
-            set { _lastName = value;
+            set {
+                _lastName = value;
                 OnPropertyChanged(nameof(LastName));
             }
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NotesApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,29 @@ namespace NotesApp.Views
         public LoginWindow()
         {
             InitializeComponent();
+
+            // Create the view model
+            var viewModel = new LoginViewModel();
+            containerGrid.DataContext = viewModel;
+            viewModel.HasLoggedIn += ViewModel_HasLoggedIn;
+        }
+
+        private void ViewModel_HasLoggedIn(object sender, EventArgs e)
+        {
+            // Close the window now
+            Close();
+        }
+
+        private void HaveAccountButton_Click(object sender, RoutedEventArgs e)
+        {
+            registerStackPanel.Visibility = Visibility.Collapsed;
+            loginStackPanel.Visibility = Visibility.Visible;
+        }
+
+        private void NoAccountButton_Click(object sender, RoutedEventArgs e)
+        {
+            loginStackPanel.Visibility = Visibility.Collapsed;
+            registerStackPanel.Visibility = Visibility.Visible;
         }
     }
 }

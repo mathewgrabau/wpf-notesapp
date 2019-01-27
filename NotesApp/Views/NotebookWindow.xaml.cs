@@ -58,6 +58,18 @@ namespace NotesApp.Views
             fontSizeComboBox.ItemsSource = fontSizes;
         }
 
+        // Used to prevent the login window being able to work/be taken into account here.
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            if (string.IsNullOrEmpty(App.UserId))
+            {
+                var loginWindow = new LoginWindow();
+                loginWindow.ShowDialog();
+            }
+        }
+
         private void _recognizer_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             string recognizedText = e.Result.Text;

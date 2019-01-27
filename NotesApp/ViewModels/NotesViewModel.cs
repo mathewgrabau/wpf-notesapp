@@ -49,7 +49,8 @@ namespace NotesApp.ViewModels
         {
             var newNotebook = new Notebook
             {
-                Name = "New Notebook"
+                Name = "New Notebook",
+                UserId = int.Parse(App.UserId)
             };
 
             DatabaseHelper.Insert(newNotebook);
@@ -84,12 +85,21 @@ namespace NotesApp.ViewModels
             {
                 try
                 {
-                    var notebooks = connection.Table<Notebook>().ToList();
-
-                    Notebooks.Clear();
-                    foreach (var notebook in notebooks)
+                    int userId;
+                    if (int.TryParse(App.UserId, out userId))
                     {
-                        Notebooks.Add(notebook);
+
+                        var notebooks = connection.Table<Notebook>().Where(x => x.UserId == userId).ToList();
+
+                        Notebooks.Clear();
+                        foreach (var notebook in notebooks)
+                        {
+                            Notebooks.Add(notebook);
+                        }
+                    }
+                    else
+                    {
+                        Notebooks.Clear();
                     }
                 }
                 catch (SQLite.SQLiteException)
