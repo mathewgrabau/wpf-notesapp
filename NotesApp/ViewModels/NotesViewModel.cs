@@ -88,7 +88,6 @@ namespace NotesApp.ViewModels
                     int userId;
                     if (int.TryParse(App.UserId, out userId))
                     {
-
                         var notebooks = connection.Table<Notebook>().Where(x => x.UserId == userId).ToList();
 
                         Notebooks.Clear();

@@ -67,6 +67,8 @@ namespace NotesApp.Views
             {
                 var loginWindow = new LoginWindow();
                 loginWindow.ShowDialog();
+
+                // TODO how about loading the right set of notebooks now? This seems very incomplete.
             }
         }
 
