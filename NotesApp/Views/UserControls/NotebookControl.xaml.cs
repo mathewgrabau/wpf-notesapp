@@ -33,12 +33,10 @@ namespace NotesApp.Views.UserControls
         public static readonly DependencyProperty NotebookProperty =
             DependencyProperty.Register("Notebook", typeof(Models.Notebook), typeof(NotebookControl), new PropertyMetadata(null, SetValues));
 
-
         public NotebookControl()
         {
             InitializeComponent();
         }
-
 
         private static void SetValues(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

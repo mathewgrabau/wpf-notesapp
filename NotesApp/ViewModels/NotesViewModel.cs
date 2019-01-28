@@ -31,8 +31,15 @@ namespace NotesApp.ViewModels
 
         public NewNoteCommand NewNoteCommand { get; set; }
 
+        public bool IsEditing
+        {
+            get; set;
+        }
+
         public NotesViewModel()
         {
+            IsEditing = false;
+
             NewNotebookCommand = new NewNotebookCommand(this);
             NewNoteCommand = new NewNoteCommand(this);
 

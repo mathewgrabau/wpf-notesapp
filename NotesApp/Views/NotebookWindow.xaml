@@ -6,10 +6,12 @@
         xmlns:local="clr-namespace:NotesApp.Views"
         mc:Ignorable="d"
         xmlns:viewModels="clr-namespace:NotesApp.ViewModels"
+        xmlns:converters="clr-namespace:NotesApp.ViewModels.Converters"
         xmlns:uc="clr-namespace:NotesApp.Views.UserControls"
         Title="NotebookWindow" Height="450" Width="800">
     <Window.Resources>
         <viewModels:NotesViewModel x:Key="viewModel" />
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
     <DockPanel DataContext="{StaticResource viewModel}">
         <!-- hosts the menu -->
@@ -37,8 +39,17 @@
                   SelectedItem="{Binding SelectedNotebook, UpdateSourceTrigger=PropertyChanged}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <!-- Bind the entire notebook. -->
-                    <uc:NotebookControl Notebook="{Binding}"/>
+                    <Grid>
+                        <!-- Bind the entire notebook. -->
+                        <uc:NotebookControl Notebook="{Binding}"/>
+                        <TextBox Text="{Binding Name, Mode=TwoWay}"
+                                 Visibility="{Binding Source={StaticResource viewModel}, Path=IsEditing, Converter={StaticResource BoolToVisConverter}}"/>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Rename" />
+                            </ContextMenu>
+                       </Grid.ContextMenu>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

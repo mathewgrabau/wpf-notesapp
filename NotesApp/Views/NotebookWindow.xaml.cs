@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NotesApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Speech.Recognition;
@@ -69,6 +70,8 @@ namespace NotesApp.Views
                 loginWindow.ShowDialog();
 
                 // TODO how about loading the right set of notebooks now? This seems very incomplete.
+
+                ((NotesViewModel)Resources["viewModel"]).ReadNotebooks();
             }
         }
 
