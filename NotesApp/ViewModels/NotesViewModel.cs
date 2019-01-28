@@ -3,17 +3,20 @@ using NotesApp.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NotesApp.ViewModels
 {
-    public class NotesViewModel
+    public class NotesViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Notebook> Notebooks { get; set; }
 
         private Notebook _selectedNotebook;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Notebook SelectedNotebook
         {
@@ -31,9 +34,23 @@ namespace NotesApp.ViewModels
 
         public NewNoteCommand NewNoteCommand { get; set; }
 
+        public BeginEditCommand BeginEditCommand { get; set; }
+
+        public HasEditedCommand HasEditedCommand { get; set; }
+
+        private bool _isEditing;
+
         public bool IsEditing
         {
-            get; set;
+            get
+            {
+                return _isEditing;
+            }
+            set
+            {
+                _isEditing = value;
+                OnPropertyChanged(nameof(IsEditing));
+            }
         }
 
         public NotesViewModel()
@@ -42,6 +59,8 @@ namespace NotesApp.ViewModels
 
             NewNotebookCommand = new NewNotebookCommand(this);
             NewNoteCommand = new NewNoteCommand(this);
+            BeginEditCommand = new BeginEditCommand(this);
+            HasEditedCommand = new HasEditedCommand(this);
 
             // Init the variables
             Notebooks = new ObservableCollection<Notebook>();
@@ -50,6 +69,11 @@ namespace NotesApp.ViewModels
             // Init the different stuff.
             ReadNotebooks();
             ReadNotes();
+        }
+
+        void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void CreateNotebook()
@@ -136,6 +160,27 @@ namespace NotesApp.ViewModels
                     }
                 }
             }
+        }
+
+        public void StartEditing()
+        {
+            IsEditing = true;
+        }
+
+        /// <summary>
+        /// Indicates that an instance has been renamed.
+        /// </summary>
+        /// <param name="notebook">The notebook instance that has been renamed</param>
+        public void HasRenamed(Notebook notebook)
+        {
+            if (notebook == null)
+            {
+                return;
+            }
+
+            DatabaseHelper.Update(notebook);
+            IsEditing = false;
+            ReadNotebooks();
         }
     }
 }
