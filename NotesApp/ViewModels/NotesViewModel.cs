@@ -16,8 +16,6 @@ namespace NotesApp.ViewModels
 
         private Notebook _selectedNotebook;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public Notebook SelectedNotebook
         {
             get { return _selectedNotebook; }
@@ -25,6 +23,18 @@ namespace NotesApp.ViewModels
             {
                 _selectedNotebook = value;
                 ReadNotes();
+            }
+        }
+
+        private Note _selectedNote;
+
+        public Note SelectedNote
+        {
+            get { return _selectedNote; }
+            set
+            {
+                _selectedNote = value;
+                SelectedNoteChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -37,6 +47,9 @@ namespace NotesApp.ViewModels
         public BeginEditCommand BeginEditCommand { get; set; }
 
         public HasEditedCommand HasEditedCommand { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler SelectedNoteChanged;
 
         private bool _isEditing;
 
@@ -181,6 +194,11 @@ namespace NotesApp.ViewModels
             DatabaseHelper.Update(notebook);
             IsEditing = false;
             ReadNotebooks();
+        }
+
+        public void UpdateSelectedNote()
+        {
+            DatabaseHelper.Update(SelectedNote);
         }
     }
 }

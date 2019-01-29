@@ -1,6 +1,7 @@
 ﻿using NotesApp.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Speech.Recognition;
 using System.Text;
@@ -25,9 +26,15 @@ namespace NotesApp.Views
     {
         SpeechRecognitionEngine _recognizer;
 
+        NotesViewModel _viewModel;
+
         public NotebookWindow()
         {
             InitializeComponent();
+
+            _viewModel = new NotesViewModel();
+            containerDockPanel.DataContext = _viewModel;
+            _viewModel.SelectedNoteChanged += _viewModel_SelectedNoteChanged;
 
             // Setup the event handlers for responding to the application events
             var currentCulture = (from r in SpeechRecognitionEngine.InstalledRecognizers()
@@ -57,6 +64,16 @@ namespace NotesApp.Views
 
             List<double> fontSizes = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24 };
             fontSizeComboBox.ItemsSource = fontSizes;
+        }
+
+        private void _viewModel_SelectedNoteChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_viewModel.SelectedNote.FileLocation))
+            {
+                var fileStream = new FileStream(_viewModel.SelectedNote.FileLocation, FileMode.Open);
+                var range = new TextRange(contentEditorRichTextBox.Document.ContentStart, contentEditorRichTextBox.Document.ContentEnd);
+                range.Load(fileStream, DataFormats.Rtf);
+            }
         }
 
         // Used to prevent the login window being able to work/be taken into account here.
@@ -188,6 +205,18 @@ namespace NotesApp.Views
             {
                 contentEditorRichTextBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeComboBox.Text);
             }
+        }
+
+        private void SaveFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            string noteFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"{_viewModel.SelectedNote.Id}.rtf");
+           _viewModel.SelectedNote.FileLocation = noteFile;
+
+            var rtfStream = new FileStream(noteFile, FileMode.Create);
+            var textRange = new TextRange(contentEditorRichTextBox.Document.ContentStart, contentEditorRichTextBox.Document.ContentEnd);
+            textRange.Save(rtfStream, DataFormats.Rtf);
+
+            _viewModel.UpdateSelectedNote();
         }
     }
 }

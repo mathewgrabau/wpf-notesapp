@@ -14,7 +14,7 @@
         <viewModels:NotesViewModel x:Key="viewModel" />
         <converters:BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
-    <DockPanel DataContext="{StaticResource viewModel}">
+    <DockPanel x:Name="containerDockPanel">
         <!-- hosts the menu -->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -87,6 +87,8 @@
                           Width="50" 
                           IsEditable="True"
                           TextBoxBase.TextChanged="FontSizeComboBox_TextChanged" />
+
+                <Button Content="Save" x:Name="saveFileButton" Click="SaveFileButton_Click" />
             </ToolBar>
         </ToolBarTray>
 
