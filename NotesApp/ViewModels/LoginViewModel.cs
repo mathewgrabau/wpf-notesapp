@@ -49,17 +49,30 @@ namespace NotesApp.ViewModels
             }
         }
 
-        public void Register()
+        public async void Register()
         {
+#if false
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseHelper.DatabaseFile))
             {
                 connection.CreateTable<User>();
                 var result = DatabaseHelper.Insert(User);
+
                 if (result)
                 {
                     App.UserId = User.Id.ToString();
                     HasLoggedIn(this, EventArgs.Empty);
                 }
+            }
+#endif
+            try
+            {
+                await App.MobileServiceClient.GetTable<User>().InsertAsync(User);
+                App.UserId = User.Id.ToString();
+                HasLoggedIn(this, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,5 +15,9 @@ namespace NotesApp
     public partial class App : Application
     {
         public static string UserId = string.Empty;
+
+        // TODO need to read this from environment or something? Perhaps a config file??
+        // TODO make sure to remove this before committing and pushing.
+        //public static MobileServiceClient MobileServiceClient = new MobileServiceClient();
     }
 }

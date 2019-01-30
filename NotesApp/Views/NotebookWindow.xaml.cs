@@ -68,6 +68,7 @@ namespace NotesApp.Views
 
         private void _viewModel_SelectedNoteChanged(object sender, EventArgs e)
         {
+            contentEditorRichTextBox.Document.Blocks.Clear();
             if (!string.IsNullOrEmpty(_viewModel.SelectedNote.FileLocation))
             {
                 var fileStream = new FileStream(_viewModel.SelectedNote.FileLocation, FileMode.Open);
