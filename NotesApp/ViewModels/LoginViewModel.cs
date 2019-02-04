@@ -33,8 +33,9 @@ namespace NotesApp.ViewModels
             LoginCommand = new LoginCommand(this);
         }
 
-        public void Login()
+        public async void Login()
         {
+#if false
             using (SQLiteConnection connection = new SQLiteConnection(DatabaseHelper.DatabaseFile))
             {
                 connection.CreateTable<User>();
@@ -46,6 +47,22 @@ namespace NotesApp.ViewModels
                     App.UserId = user.Id.ToString();
                     HasLoggedIn(this, EventArgs.Empty);
                 }
+            }
+#endif
+
+            try
+            {
+                var users = await App.MobileServiceClient.GetTable<User>().Where(u => u.Username == User.Username).ToListAsync();
+                var user = users.FirstOrDefault();
+                if (user != null && user.Password == User.Password)
+                {
+                    App.UserId = user.Id;
+                    HasLoggedIn(this, EventArgs.Empty);
+                }
+            }
+            catch (Exception e)
+            {
+                // TODO need some error handling here.
             }
         }
 

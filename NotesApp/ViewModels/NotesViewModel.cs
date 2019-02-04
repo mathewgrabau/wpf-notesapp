@@ -94,7 +94,7 @@ namespace NotesApp.ViewModels
             var newNotebook = new Notebook
             {
                 Name = "New Notebook",
-                UserId = int.Parse(App.UserId)
+                UserId = App.UserId
             };
 
             DatabaseHelper.Insert(newNotebook);
@@ -107,7 +107,7 @@ namespace NotesApp.ViewModels
         /// Creates the note that should be added to the database.
         /// </summary>
         /// <param name="notebookId"></param>
-        public void CreateNote(int notebookId)
+        public void CreateNote(string notebookId)
         {
             var newNote = new Note()
             {
@@ -129,8 +129,8 @@ namespace NotesApp.ViewModels
             {
                 try
                 {
-                    int userId;
-                    if (int.TryParse(App.UserId, out userId))
+                    string userId = App.UserId;
+                    if (!string.IsNullOrEmpty(userId))
                     {
                         var notebooks = connection.Table<Notebook>().Where(x => x.UserId == userId).ToList();
 
