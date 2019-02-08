@@ -25,6 +25,8 @@ namespace NotesApp.ViewModels
 
         public event EventHandler HasLoggedIn;
 
+        public event EventHandler LoginRejected;
+
         public LoginViewModel()
         {
             User = new User();
@@ -58,6 +60,10 @@ namespace NotesApp.ViewModels
                 {
                     App.UserId = user.Id;
                     HasLoggedIn(this, EventArgs.Empty);
+                }
+                else
+                {
+                    LoginRejected(this, EventArgs.Empty);
                 }
             }
             catch (Exception e)

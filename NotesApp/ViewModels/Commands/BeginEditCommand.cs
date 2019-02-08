@@ -48,7 +48,7 @@ namespace NotesApp.ViewModels.Commands
         public void Execute(object parameter)
         {
             Notebook notebook = parameter as Notebook;
-            ViewModel.HasRenamed(notebook);
+            ViewModel.HasRenamedAsync(notebook);
         }
     }
 }

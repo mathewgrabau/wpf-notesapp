@@ -28,12 +28,18 @@ namespace NotesApp.Views
             var viewModel = new LoginViewModel();
             containerGrid.DataContext = viewModel;
             viewModel.HasLoggedIn += ViewModel_HasLoggedIn;
+            viewModel.LoginRejected += ViewModel_LoginRejected;
         }
 
         private void ViewModel_HasLoggedIn(object sender, EventArgs e)
         {
             // Close the window now
             Close();
+        }
+
+        private void ViewModel_LoginRejected(object sender, EventArgs e)
+        {
+            MessageBox.Show("Username or password was not valid", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void HaveAccountButton_Click(object sender, RoutedEventArgs e)

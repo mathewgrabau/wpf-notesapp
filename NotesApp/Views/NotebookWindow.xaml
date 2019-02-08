@@ -44,9 +44,10 @@
                         <!-- Bind the entire notebook. -->
                         <uc:NotebookControl Notebook="{Binding}"/>
                         <TextBox Text="{Binding Name, Mode=TwoWay}"
-                                 Visibility="{Binding Source={StaticResource viewModel}, Path=IsEditing, Converter={StaticResource BoolToVisConverter}}">
+                                 Visibility="{Binding Path=IsEditing, Source={StaticResource viewModel}, Converter={StaticResource BoolToVisConverter}}">
                             <b:Interaction.Triggers>
                                 <b:EventTrigger EventName="LostFocus">
+                                    <!-- bind it up to the parent by the name-->
                                     <b:InvokeCommandAction CommandParameter="{Binding}" 
                                                            Command="{Binding Source={StaticResource viewModel}, Path=HasEditedCommand}" />
                                 </b:EventTrigger>

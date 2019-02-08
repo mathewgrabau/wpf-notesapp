@@ -23,6 +23,7 @@ namespace NotesApp.ViewModels
             {
                 _selectedNotebook = value;
                 ReadNotes();
+                OnPropertyChanged(nameof(SelectedNotebook));
             }
         }
 
@@ -89,88 +90,147 @@ namespace NotesApp.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void CreateNotebook()
+        public async void CreateNotebook()
         {
-            var newNotebook = new Notebook
+            try
             {
-                Name = "New Notebook",
-                UserId = App.UserId
-            };
+                var newNotebook = new Notebook
+                {
+                    Name = "New Notebook",
+                    UserId = App.UserId
+                };
 
-            DatabaseHelper.Insert(newNotebook);
+                //DatabaseHelper.Insert(newNotebook);
 
-            // Refreshing
-            ReadNotebooks();
+                //// Refreshing
+                //ReadNotebooks();
+
+                await App.MobileServiceClient.GetTable<Notebook>().InsertAsync(newNotebook);
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         /// <summary>
         /// Creates the note that should be added to the database.
         /// </summary>
         /// <param name="notebookId"></param>
-        public void CreateNote(string notebookId)
+        public async void CreateNote(string notebookId)
         {
-            var newNote = new Note()
+            try
             {
-                NotebookId = notebookId,
-                CreatedTime = DateTime.Now,
-                UpdatedTime = DateTime.Now,
-                Title = "New Note"
-            };
+                var newNote = new Note()
+                {
+                    NotebookId = notebookId,
+                    CreatedTime = DateTime.Now,
+                    UpdatedTime = DateTime.Now,
+                    Title = "New Note"
+                };
 
-            // Adding it into the database now
-            DatabaseHelper.Insert(newNote);
-            // Invoke the read notes to bind the list again
+                await App.MobileServiceClient.GetTable<Note>().InsertAsync(newNote);
+
+                // Adding it into the database now
+               // DatabaseHelper.Insert(newNote);
+                // Invoke the read notes to bind the list again
+             //   ReadNotes();
+            }
+            catch (Exception e)
+            {
+
+            }
+
             ReadNotes();
         }
 
-        public void ReadNotebooks()
+        public async void ReadNotebooks()
         {
-            using (var connection = new SQLite.SQLiteConnection(DatabaseHelper.DatabaseFile))
-            {
-                try
-                {
-                    string userId = App.UserId;
-                    if (!string.IsNullOrEmpty(userId))
-                    {
-                        var notebooks = connection.Table<Notebook>().Where(x => x.UserId == userId).ToList();
+            //using (var connection = new SQLite.SQLiteConnection(DatabaseHelper.DatabaseFile))
+            //{
+            //    try
+            //    {
+            //        string userId = App.UserId;
+            //        if (!string.IsNullOrEmpty(userId))
+            //        {
+            //            var notebooks = connection.Table<Notebook>().Where(x => x.UserId == userId).ToList();
 
-                        Notebooks.Clear();
-                        foreach (var notebook in notebooks)
-                        {
-                            Notebooks.Add(notebook);
-                        }
-                    }
-                    else
-                    {
-                        Notebooks.Clear();
-                    }
-                }
-                catch (SQLite.SQLiteException)
+            //            Notebooks.Clear();
+            //            foreach (var notebook in notebooks)
+            //            {
+            //                Notebooks.Add(notebook);
+            //            }
+            //        }
+            //        else
+            //        {
+            //            Notebooks.Clear();
+            //        }
+            //    }
+            //    catch (SQLite.SQLiteException)
+            //    {
+            //        // TODO logging or information should get shown here?
+
+            //        Notebooks.Clear();
+            //    }
+            //}
+
+            try
+            {
+                string userId = App.UserId;
+                if (!string.IsNullOrEmpty(userId))
                 {
-                    // TODO logging or information should get shown here?
+                    var notebooks = await App.MobileServiceClient.GetTable<Notebook>().Where(n => n.UserId == userId).ToListAsync();
 
                     Notebooks.Clear();
+                    foreach(var notebook in notebooks)
+                    {
+                        Notebooks.Add(notebook);
+                    }
+
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Notebooks)));
                 }
+                else
+                {
+                    Notebooks.Clear();
+                }
+            }
+            catch (Exception e)
+            {
+
             }
 
             // Refreshing now
             ReadNotes();
         }
 
-        public void ReadNotes()
+        public async  void ReadNotes()
         {
             if (SelectedNotebook != null)
             {
-                using (var connection = new SQLite.SQLiteConnection(DatabaseHelper.DatabaseFile))
+                //using (var connection = new SQLite.SQLiteConnection(DatabaseHelper.DatabaseFile))
+                //{
+
+                //    var notes = connection.Table<Note>().Where(note => note.NotebookId == SelectedNotebook.Id).ToList();
+
+                //    Notes.Clear();
+                //    foreach (var note in notes)
+                //    {
+                //        Notes.Add(note);
+                //    }
+                //}
+
+                try
                 {
-
-                    var notes = connection.Table<Note>().Where(note => note.NotebookId == SelectedNotebook.Id).ToList();
-
+                    var notes = await App.MobileServiceClient.GetTable<Note>().Where(note => note.NotebookId == SelectedNotebook.Id).ToListAsync();
                     Notes.Clear();
-                    foreach (var note in notes)
+                    foreach(var note in notes)
                     {
                         Notes.Add(note);
                     }
+                }
+                catch(Exception e)
+                {
+
                 }
             }
         }
@@ -184,21 +244,43 @@ namespace NotesApp.ViewModels
         /// Indicates that an instance has been renamed.
         /// </summary>
         /// <param name="notebook">The notebook instance that has been renamed</param>
-        public void HasRenamed(Notebook notebook)
+        public async void HasRenamedAsync(Notebook notebook)
         {
             if (notebook == null)
             {
                 return;
             }
 
-            DatabaseHelper.Update(notebook);
+            //DatabaseHelper.Update(notebook);
+            try
+            {
+                await App.MobileServiceClient.GetTable<Notebook>().UpdateAsync(notebook);
+                IsEditing = false;
+                
+            }
+            catch (Exception e)
+            {
+                
+                // TODO Put an error message in here to allow the user to respond accordingly.
+            }
+
             IsEditing = false;
+            // Still refresh the source here.
             ReadNotebooks();
         }
 
-        public void UpdateSelectedNote()
+        public async void UpdateSelectedNoteAsync()
         {
-            DatabaseHelper.Update(SelectedNote);
+            //DatabaseHelper.Update(SelectedNote);
+            try
+            {
+                await App.MobileServiceClient.GetTable<Note>().UpdateAsync(SelectedNote);
+
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

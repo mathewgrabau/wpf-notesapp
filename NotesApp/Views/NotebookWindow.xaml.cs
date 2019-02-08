@@ -32,7 +32,8 @@ namespace NotesApp.Views
         {
             InitializeComponent();
 
-            _viewModel = new NotesViewModel();
+            //_viewModel = new NotesViewModel();
+            _viewModel = this.Resources["viewModel"] as NotesViewModel;
             containerDockPanel.DataContext = _viewModel;
             _viewModel.SelectedNoteChanged += _viewModel_SelectedNoteChanged;
 
@@ -87,9 +88,7 @@ namespace NotesApp.Views
                 var loginWindow = new LoginWindow();
                 loginWindow.ShowDialog();
 
-                // TODO how about loading the right set of notebooks now? This seems very incomplete.
-
-                ((NotesViewModel)Resources["viewModel"]).ReadNotebooks();
+                _viewModel.ReadNotebooks();
             }
         }
 
@@ -217,7 +216,7 @@ namespace NotesApp.Views
             var textRange = new TextRange(contentEditorRichTextBox.Document.ContentStart, contentEditorRichTextBox.Document.ContentEnd);
             textRange.Save(rtfStream, DataFormats.Rtf);
 
-            _viewModel.UpdateSelectedNote();
+            _viewModel.UpdateSelectedNoteAsync();
         }
     }
 }
