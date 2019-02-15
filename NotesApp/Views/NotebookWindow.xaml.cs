@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.WindowsAzure.Storage;
 
 namespace NotesApp.Views
 {
@@ -72,9 +73,12 @@ namespace NotesApp.Views
             contentEditorRichTextBox.Document.Blocks.Clear();
             if (!string.IsNullOrEmpty(_viewModel.SelectedNote.FileLocation))
             {
-                var fileStream = new FileStream(_viewModel.SelectedNote.FileLocation, FileMode.Open);
-                var range = new TextRange(contentEditorRichTextBox.Document.ContentStart, contentEditorRichTextBox.Document.ContentEnd);
-                range.Load(fileStream, DataFormats.Rtf);
+                // TODO - exception handling?
+                using (var fileStream = new FileStream(_viewModel.SelectedNote.FileLocation, FileMode.Open))
+                {
+                    var range = new TextRange(contentEditorRichTextBox.Document.ContentStart, contentEditorRichTextBox.Document.ContentEnd);
+                    range.Load(fileStream, DataFormats.Rtf);
+                }
             }
         }
 
@@ -209,14 +213,35 @@ namespace NotesApp.Views
 
         private void SaveFileButton_Click(object sender, RoutedEventArgs e)
         {
+            string noteFileName = $"{_viewModel.SelectedNote.Id}.rtf";
             string noteFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"{_viewModel.SelectedNote.Id}.rtf");
            _viewModel.SelectedNote.FileLocation = noteFile;
 
-            var rtfStream = new FileStream(noteFile, FileMode.Create);
-            var textRange = new TextRange(contentEditorRichTextBox.Document.ContentStart, contentEditorRichTextBox.Document.ContentEnd);
-            textRange.Save(rtfStream, DataFormats.Rtf);
+            // Ensuring proper file access here.
+            using (var rtfStream = new FileStream(noteFile, FileMode.Create))
+            {
+                var textRange = new TextRange(contentEditorRichTextBox.Document.ContentStart, contentEditorRichTextBox.Document.ContentEnd);
+                textRange.Save(rtfStream, DataFormats.Rtf);
+            }
+
+            UploadFile(noteFile);
 
             _viewModel.UpdateSelectedNoteAsync();
+        }
+
+        private async void UploadFile(string noteFileLocation, string noteFileName)
+        {
+            // NOTE: need to add system files ehre.
+            var account = CloudStorageAccount.Parse("");
+            var blobClient = account.CreateCloudBlobClient();
+
+            var notesContainer = blobClient.GetContainerReference("notes");  // The name matching is important here.
+            await notesContainer.CreateIfNotExistsAsync();
+
+            using (var rtfStream = new FileStream(noteFile, FileMode.Open))
+            {
+                // Need the container now to be able to move this stuff here.
+            }
         }
     }
 }
